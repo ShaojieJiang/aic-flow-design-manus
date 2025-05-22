@@ -9,10 +9,16 @@ import ExecutionDetail from './components/execution/ExecutionDetail';
 import AIWorkflowSuggestion from './components/ai/AIWorkflowSuggestion';
 import AINodeTester from './components/ai/AINodeTester';
 import Dashboard from './components/dashboard/Dashboard';
+import { config } from './lib/config';
 
 // Auth guard component
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = localStorage.getItem('token') !== null;
+  // In development mode with bypass enabled, automatically set dev token
+  if (config.bypassAuth && !localStorage.getItem('token')) {
+    localStorage.setItem('token', config.devUser.token);
+  }
+  
+  const isAuthenticated = config.bypassAuth || localStorage.getItem('token') !== null;
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
 };
 

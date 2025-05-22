@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { config } from '../lib/config';
 
 // Create an axios instance with default config
 const apiClient = axios.create({
@@ -28,6 +29,16 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
+    // In development with bypass enabled, return mock data instead of error
+    if (config.bypassAuth) {
+      if (error.config.url === '/auth/me') {
+        return Promise.resolve({ data: config.devUser });
+      }
+      // For other API calls in dev mode, just log the error but don't redirect
+      console.warn('API Error (bypassed in dev mode):', error);
+      return Promise.resolve({ data: {} });
+    }
+    
     // Handle 401 Unauthorized errors (token expired)
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token');
