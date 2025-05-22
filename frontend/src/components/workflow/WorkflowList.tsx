@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { workflowsAPI } from '@/api';
+import styles from '@/components/ui/style-guide';
 
 interface Workflow {
   id: number;
@@ -81,105 +82,126 @@ const WorkflowList: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className={styles.container}>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Workflows</h1>
+        <h1 className={styles.heading.h1}>Workflows</h1>
         <button
           onClick={handleCreateWorkflow}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={styles.button.primary}
         >
           Create Workflow
         </button>
       </div>
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className={styles.alert.error}>
           {error}
         </div>
       )}
 
+      <div className="mb-4 flex gap-4">
+        <input
+          type="text"
+          placeholder="Search workflows..."
+          className={styles.input}
+        />
+        <select className={styles.select}>
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <select className={styles.select}>
+          <option value="updated">Last Modified</option>
+          <option value="created">Created Date</option>
+          <option value="name">Name</option>
+        </select>
+      </div>
+
       {workflows.length === 0 ? (
-        <div className="bg-white shadow rounded-lg p-6 text-center">
-          <h3 className="text-lg font-medium text-gray-900">No workflows found</h3>
+        <div className={styles.card}>
+          <h3 className={styles.heading.h3}>No workflows found</h3>
           <p className="mt-2 text-gray-500">Create your first workflow to get started.</p>
           <button
             onClick={handleCreateWorkflow}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`${styles.button.primary} mt-4`}
           >
             Create Workflow
           </button>
         </div>
       ) : (
-        <div className="bg-white shadow overflow-hidden sm:rounded-md">
-          <ul className="divide-y divide-gray-200">
-            {workflows.map((workflow) => (
-              <li key={workflow.id}>
-                <div className="px-4 py-4 sm:px-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <div className="ml-3">
-                        <p className="text-lg font-medium text-blue-600 truncate">{workflow.name}</p>
-                        <p className="text-sm text-gray-500">{workflow.description}</p>
-                      </div>
+        <div className={styles.table.container}>
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th className={styles.table.header}>Name</th>
+                <th className={styles.table.header}>Status</th>
+                <th className={styles.table.header}>Last Run</th>
+                <th className={styles.table.header}>Created By</th>
+                <th className={styles.table.header}>Tags</th>
+                <th className={styles.table.header}>Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {workflows.map((workflow) => (
+                <tr key={workflow.id}>
+                  <td className={styles.table.row}>
+                    <div className="text-sm font-medium text-blue-600">{workflow.name}</div>
+                    <div className="text-sm text-gray-500">{workflow.description}</div>
+                  </td>
+                  <td className={styles.table.row}>
+                    <span className={workflow.is_active ? styles.badge.success : styles.badge.inactive}>
+                      {workflow.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+                  <td className={styles.table.row}>
+                    <div className="text-sm text-gray-500">
+                      {new Date(workflow.updated_at).toLocaleDateString()}
                     </div>
+                  </td>
+                  <td className={styles.table.row}>
+                    <div className="text-sm text-gray-500">You</div>
+                  </td>
+                  <td className={styles.table.row}>
+                    <div className="flex flex-wrap gap-1">
+                      {workflow.tags?.map((tag) => (
+                        <span key={tag} className={styles.badge.success}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className={styles.table.row}>
                     <div className="flex space-x-2">
                       <button
                         onClick={() => navigate(`/workflows/${workflow.id}`)}
-                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                        className={styles.button.secondary}
                       >
                         View
                       </button>
                       <button
                         onClick={() => navigate(`/workflows/${workflow.id}/edit`)}
-                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className={styles.button.primary}
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleExecuteWorkflow(workflow.id)}
-                        className="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className={styles.button.secondary}
                       >
                         Run
                       </button>
                       <button
                         onClick={() => handleDeleteWorkflow(workflow.id)}
-                        className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+                        className={styles.button.danger}
                       >
                         Delete
                       </button>
                     </div>
-                  </div>
-                  <div className="mt-2 sm:flex sm:justify-between">
-                    <div className="sm:flex">
-                      <p className="flex items-center text-sm text-gray-500">
-                        {workflow.is_active ? (
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            Active
-                          </span>
-                        ) : (
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                            Inactive
-                          </span>
-                        )}
-                      </p>
-                      <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                        {workflow.tags && workflow.tags.map((tag) => (
-                          <span key={tag} className="mr-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                            {tag}
-                          </span>
-                        ))}
-                      </p>
-                    </div>
-                    <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                      <p>
-                        Updated {new Date(workflow.updated_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
