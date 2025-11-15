@@ -1,8 +1,30 @@
 {
-  "name": "react_repo",
-  "private": true,
-  "version": "0.0.0",
+  "name": "aic-flow-frontend",
+  "private": false,
+  "version": "0.1.0",
+  "description": "Frontend application for the AIC Flow design experience",
   "type": "module",
+  "license": "MIT",
+  "author": "AIC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shaojiejiang/aic-flow-design-manus.git",
+    "directory": "frontend"
+  },
+  "homepage": "https://github.com/shaojiejiang/aic-flow-design-manus#readme",
+  "keywords": [
+    "aic",
+    "flow",
+    "frontend",
+    "react",
+    "vite"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -42,7 +64,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
-    "date-fns": "^4.1.0",
+    "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.5.2",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.364.0",
