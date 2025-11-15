@@ -239,7 +239,7 @@ jobs:
       id-token: write  # Required for npm trusted publishing and provenance
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
           registry-url: 'https://registry.npmjs.org'
@@ -258,4 +258,4 @@ jobs:
       - name: Build
         run: npm run build
       - name: Publish to npm
-        run: npm publish --access public
+        run: npm publish --provenance --access public
