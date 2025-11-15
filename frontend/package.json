@@ -1,7 +1,7 @@
 {
   "name": "aic-flow-frontend",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Frontend application for the AIC Flow design experience",
   "type": "module",
   "license": "MIT",
